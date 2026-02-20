@@ -1,87 +1,142 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <link rel="icon" href="data:,">
+  <link rel="icon" href="data:,">
   <title>Secure Counter Dashboard</title>
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/dashboard.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <body>
 
-<div class="navbar">
+  <div class="navbar">
 
-  <div class="nav-left">
-    <div class="logo-badge">✓</div>
-    <div class="brand">
-      <span class="brand-name">Secure-Counter</span>
-      <span class="pro-badge">PRO</span>
+    <div class="nav-left">
+      <div class="logo-badge">✓</div>
+      <div class="brand">
+        <span class="brand-name">Secure-Counter</span>
+        <span class="pro-badge">PRO</span>
+      </div>
+    </div>
+
+    <div class="nav-center">
+      <div class="status-group">
+        <span class="label">SYSTEM STATUS</span>
+        <span id="backendStatus" class="status-indicator offline">
+          ● Checking...
+        </span>
+      </div>
+
+      <div class="info-group">
+        <span class="label">ACTIVE CAMERAS</span>
+        <span id="cameraCount">02 / 02</span>
+      </div>
+
+      <div class="info-group">
+        <span class="label">TIME (LOCAL)</span>
+        <span id="localTime">--:--:--</span>
+      </div>
+    </div>
+
+    <div class="nav-right">
+      <select id="cameraSelect" class="camera-select" onchange="handleCameraChange(this.value)">
+        <option value="cam1">Camera 1</option>
+        <option value="cam2">Camera 2</option>
+        <option value="all">All Cameras</option>
+      </select>
+
+      <button class="run-btn" onclick="runAnalysis()">▶ Run Analysis</button>
+    </div>
+
+  </div>
+
+  <!-- ===== SINGLE CAMERA VIEW ===== -->
+  <div id="singleCameraView" class="dashboard">
+
+    <div class="live-feed">
+      <h3>Live Camera</h3>
+      <div class="video-box">
+        <span class="feed-label">📷 Camera Feed</span>
+      </div>
+    </div>
+
+    <div class="status-panel">
+      <div id="systemStatus" class="status normal">NORMAL</div>
+
+      <div id="popupAlert" class="popup hidden">
+        <h2>🚨 ALERT</h2>
+        <p id="alertType"></p>
+        <p id="alertConfidence"></p>
+      </div>
+
+      <div id="personStatus">Person: --</div>
+      <div id="drawerStatus">Drawer: --</div>
+    </div>
+
+  </div>
+
+  <!-- ===== ALL CAMERAS GRID VIEW ===== -->
+  <div id="allCamerasView" class="all-cameras-section hidden">
+    <h3 class="all-cameras-title">All Camera Feeds</h3>
+    <div class="cameras-grid" id="camerasGrid">
+
+      <div class="camera-tile" id="tile-cam1">
+        <div class="camera-tile-header">
+          <span class="cam-label">📷 Camera 1</span>
+          <span class="cam-status-dot online"></span>
+        </div>
+        <div class="camera-tile-feed">
+          <span class="feed-placeholder">Camera 1 Feed</span>
+        </div>
+        <div class="tile-hover-overlay" onclick="maximizeCam('cam1', 'Camera 1')">
+          <div class="maximize-btn">⛶ Maximize</div>
+        </div>
+      </div>
+
+      <div class="camera-tile" id="tile-cam2">
+        <div class="camera-tile-header">
+          <span class="cam-label">📷 Camera 2</span>
+          <span class="cam-status-dot online"></span>
+        </div>
+        <div class="camera-tile-feed">
+          <span class="feed-placeholder">Camera 2 Feed</span>
+        </div>
+        <div class="tile-hover-overlay" onclick="maximizeCam('cam2', 'Camera 2')">
+          <div class="maximize-btn">⛶ Maximize</div>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <div class="nav-center">
-    <div class="status-group">
-      <span class="label">SYSTEM STATUS</span>
-      <span id="backendStatus" class="status-indicator offline">
-        ● Checking...
-      </span>
+  <!-- ===== MAXIMIZE MODAL ===== -->
+  <div id="maximizeModal" class="maximize-modal hidden">
+    <div class="modal-topbar">
+      <span id="modalCamLabel" class="modal-cam-label">📷 Camera 1</span>
+      <div class="modal-controls">
+        <span class="modal-status-dot online"></span>
+        <span class="modal-status-text">LIVE</span>
+        <button class="minimize-btn" onclick="minimizeCam()">✕ Go Back</button>
+      </div>
     </div>
-
-    <div class="info-group">
-      <span class="label">ACTIVE CAMERAS</span>
-      <span id="cameraCount">01 / 01</span>
+    <div class="modal-feed-area">
+      <span class="feed-placeholder-large" id="modalFeedLabel">Camera Feed</span>
     </div>
-
-    <div class="info-group">
-      <span class="label">TIME (LOCAL)</span>
-      <span id="localTime">--:--:--</span>
+    <div class="modal-footer">
+      <span class="modal-hint">Press <kbd>Esc</kbd> or click Go Back to return to dashboard</span>
     </div>
   </div>
 
-  <div class="nav-right">
-    <select id="cameraSelect" class="camera-select">
-      <option value="cam1">Camera 1</option>
-      <option value="cam2">Camera 2</option>
-    </select>
-
-    <button class="run-btn" onclick="runAnalysis()">▶ Run Analysis</button>
+  <div class="pos-section">
+    <h3>POS Logs</h3>
+    <ul id="posList"></ul>
   </div>
 
-</div>
-
-<div class="dashboard">
-
-  <div class="live-feed">
-    <h3>Live Camera</h3>
-    <div class="video-box">Camera Feed</div>
-  </div>
-
-  <div class="status-panel">
-    <div id="systemStatus" class="status normal">NORMAL</div>
-
-<div id="popupAlert" class="popup hidden">
-  <h2>🚨 ALERT</h2>
-  <p id="alertType"></p>
-  <p id="alertConfidence"></p>
-</div>
-    
-    <div id="personStatus">Person: --</div>
-    <div id="drawerStatus">Drawer: --</div>
-  </div>
-
-</div>
-
-<div class="pos-section">
-  <h3>POS Logs</h3>
-  <ul id="posList"></ul>
-</div>
-
-<div id="popupAlert" class="popup hidden">
-  <h2>🚨 ALERT</h2>
-  <p id="alertType"></p>
-  <p id="alertConfidence"></p>
-</div>
-
-<script src="js/api.js"></script>
-<script src="js/dashboard.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
 </body>
+
 </html>

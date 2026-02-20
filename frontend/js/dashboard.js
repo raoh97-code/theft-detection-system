@@ -3,6 +3,46 @@
 /* ===================================== */
 
 
+/* ===================================== */
+/* CAMERA VIEW SWITCHING */
+/* ===================================== */
+
+function handleCameraChange(value) {
+  const singleView = document.getElementById('singleCameraView');
+  const allView    = document.getElementById('allCamerasView');
+
+  if (value === 'all') {
+    singleView.classList.add('hidden');
+    allView.classList.remove('hidden');
+  } else {
+    singleView.classList.remove('hidden');
+    allView.classList.add('hidden');
+  }
+}
+
+/* ===================================== */
+/* MAXIMIZE / MINIMIZE CAMERA MODAL */
+/* ===================================== */
+
+function maximizeCam(camId, camName) {
+  const modal = document.getElementById('maximizeModal');
+  document.getElementById('modalCamLabel').textContent = '\uD83D\uDCF7 ' + camName;
+  document.getElementById('modalFeedLabel').textContent = camName + ' Feed';
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function minimizeCam() {
+  const modal = document.getElementById('maximizeModal');
+  modal.classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') minimizeCam();
+});
+
 
 /* ===================================== */
 /* ELEMENT REFERENCES */
