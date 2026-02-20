@@ -2,7 +2,7 @@ import cv2
 import json
 from ultralytics import YOLO
 
-# Load YOLO model
+
 model = YOLO("yolov8n.pt")
 
 video_path = "Screen Recording 2026-02-20 135222.mp4"
@@ -11,9 +11,8 @@ cap = cv2.VideoCapture(video_path)
 events = []
 
 frame_count = 0
-FRAME_SKIP = 5  # Process every 5th frame
+FRAME_SKIP = 5 
 
-# Track which people are currently visible
 active_people = set()
 
 def format_time(ms):
@@ -29,14 +28,14 @@ while cap.isOpened():
 
     frame_count += 1
 
-    # Skip frames (performance + stability)
+    
     if frame_count % FRAME_SKIP != 0:
         continue
 
     video_time_ms = cap.get(cv2.CAP_PROP_POS_MSEC)
     timestamp = format_time(video_time_ms)
 
-    # ---- TRACKING INSTEAD OF DETECTION ----
+    
     results = model.track(frame, persist=True, verbose=False)
 
     current_people = set()

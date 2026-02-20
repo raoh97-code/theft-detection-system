@@ -1,22 +1,8 @@
 [
-    {
-        "time": "00:00",
-        "event": "entered",
-        "person_id": 1
-    },
-    {
-        "time": "00:03",
-        "event": "left",
-        "person_id": 1
-    },
-    {
-        "time": "00:04",
-        "event": "entered",
-        "person_id": 5
-    },
-    {
-        "time": "00:04",
-        "event": "entered",
-        "person_id": 6
-    }
+  {
+    "timestamp": "2026-02-20T10:00:01.000Z",
+    "type": "cash_motion",
+    "person_detected": true,
+    "suspicious": true
+  }
 ]
