@@ -1,0 +1,163 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  background: #1e293b;
+}
+
+.dashboard {
+  display: flex;
+  padding: 20px;
+}
+
+.live-feed {
+  flex: 2;
+}
+
+.video-box {
+  background: #334155;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.status-panel {
+  flex: 1;
+  padding-left: 20px;
+}
+
+.status {
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.normal { background: #22c55e; }
+.medium { background: #facc15; }
+.abnormal { background: #ef4444; }
+
+.pos-section {
+  padding: 20px;
+}
+
+.popup {
+  position: fixed;
+  top: 30%;
+  left: 40%;
+  background: #ef4444;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.hidden {
+  display: none;
+}
+body {
+  background: #0B1220;
+  color: white;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* NAVBAR */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px;
+  background: #0F172A;
+  border-bottom: 1px solid #1F2937;
+}
+
+/* LEFT */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-badge {
+  width: 28px;
+  height: 28px;
+  background: #3B82F6;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.brand-name {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.pro-badge {
+  background: #1E3A8A;
+  color: #93C5FD;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  margin-left: 6px;
+}
+
+/* CENTER */
+.nav-center {
+  display: flex;
+  gap: 40px;
+}
+
+.label {
+  font-size: 11px;
+  color: #9CA3AF;
+  display: block;
+}
+
+.status-indicator {
+  font-weight: 500;
+}
+
+.status-indicator.offline {
+  color: #EF4444;
+}
+
+.status-indicator.online {
+  color: #22C55E;
+}
+
+/* RIGHT */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.video-path {
+  background: #111827;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  border: 1px solid #1F2937;
+}
+
+.run-btn {
+  background: #3B82F6;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.run-btn:hover {
+  background: #2563EB;
+}
+.camera-select {
+  background: #111827;
+  color: white;
+  border: 1px solid #1F2937;
+  padding: 6px 10px;
+  border-radius: 6px;
+}

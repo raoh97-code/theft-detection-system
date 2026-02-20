@@ -1,0 +1,156 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  height: 100vh;
+  background: #0B1220;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+/* LEFT PANEL */
+.left-panel {
+  flex: 1;
+  background: linear-gradient(135deg, #0f172a, #1e3a8a);
+  color: white;
+  padding: 80px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  animation: fadeInLeft 1.2s ease forwards;
+}
+
+.title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 48px;
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, #3B82F6, #22D3EE);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glowText 3s infinite alternate;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #cbd5e1;
+  margin-bottom: 40px;
+}
+
+.features p {
+  margin: 10px 0;
+  font-size: 16px;
+  color: #e2e8f0;
+  transition: 0.3s;
+}
+
+.features p:hover {
+  transform: translateX(10px);
+  color: #38bdf8;
+}
+
+/* Animated glowing circle */
+.glow-circle {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(59,130,246,0.4), transparent 70%);
+  border-radius: 50%;
+  top: 20%;
+  left: 20%;
+  animation: pulse 6s infinite ease-in-out;
+}
+
+/* RIGHT PANEL */
+.right-panel {
+  flex: 1;
+  background: #0B1220;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-box {
+  background: rgba(17, 24, 39, 0.85);
+  backdrop-filter: blur(12px);
+  padding: 50px;
+  width: 360px;
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(59,130,246,0.3);
+  animation: fadeInUp 1s ease forwards;
+}
+
+.login-box h2 {
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #1f2937;
+  background: #111827;
+  color: white;
+}
+
+.login-box input:focus {
+  outline: none;
+  border: 1px solid #3B82F6;
+}
+
+.login-box button {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(90deg, #3B82F6, #2563EB);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-box button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 15px #3B82F6;
+}
+
+.error {
+  margin-top: 10px;
+  text-align: center;
+  color: #EF4444;
+}
+
+/* ANIMATIONS */
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glowText {
+  from { text-shadow: 0 0 5px #3B82F6; }
+  to { text-shadow: 0 0 20px #22D3EE; }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.2); opacity: 0.3; }
+  100% { transform: scale(1); opacity: 0.6; }
+}

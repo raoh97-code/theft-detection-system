@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" href="data:,">
+  <title>Secure Counter Dashboard</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+<div class="navbar">
+
+  <div class="nav-left">
+    <div class="logo-badge">✓</div>
+    <div class="brand">
+      <span class="brand-name">Secure-Counter</span>
+      <span class="pro-badge">PRO</span>
+    </div>
+  </div>
+
+  <div class="nav-center">
+    <div class="status-group">
+      <span class="label">SYSTEM STATUS</span>
+      <span id="backendStatus" class="status-indicator offline">
+        ● Checking...
+      </span>
+    </div>
+
+    <div class="info-group">
+      <span class="label">ACTIVE CAMERAS</span>
+      <span id="cameraCount">01 / 01</span>
+    </div>
+
+    <div class="info-group">
+      <span class="label">TIME (LOCAL)</span>
+      <span id="localTime">--:--:--</span>
+    </div>
+  </div>
+
+  <div class="nav-right">
+    <select id="cameraSelect" class="camera-select">
+      <option value="cam1">Camera 1</option>
+      <option value="cam2">Camera 2</option>
+    </select>
+
+    <button class="run-btn" onclick="runAnalysis()">▶ Run Analysis</button>
+  </div>
+
+</div>
+
+<div class="dashboard">
+
+  <div class="live-feed">
+    <h3>Live Camera</h3>
+    <div class="video-box">Camera Feed</div>
+  </div>
+
+  <div class="status-panel">
+    <div id="systemStatus" class="status normal">NORMAL</div>
+
+<div id="popupAlert" class="popup hidden">
+  <h2>🚨 ALERT</h2>
+  <p id="alertType"></p>
+  <p id="alertConfidence"></p>
+</div>
+    
+    <div id="personStatus">Person: --</div>
+    <div id="drawerStatus">Drawer: --</div>
+  </div>
+
+</div>
+
+<div class="pos-section">
+  <h3>POS Logs</h3>
+  <ul id="posList"></ul>
+</div>
+
+<div id="popupAlert" class="popup hidden">
+  <h2>🚨 ALERT</h2>
+  <p id="alertType"></p>
+  <p id="alertConfidence"></p>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>
