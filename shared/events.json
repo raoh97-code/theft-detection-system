@@ -1,0 +1,18 @@
+[
+    {
+        "time": "00:00",
+        "event": "person_entered"
+    },
+    {
+        "time": "00:01",
+        "event": "person_left"
+    },
+    {
+        "time": "00:02",
+        "event": "person_entered"
+    },
+    {
+        "time": "00:19",
+        "event": "person_left"
+    }
+]
