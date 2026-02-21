@@ -5,6 +5,7 @@ body {
   font-family: "Segoe UI", sans-serif;
   margin: 0;
   padding: 0;
+  min-height: 100vh;
 }
 
 /* ===== NAVBAR ===== */
@@ -20,11 +21,16 @@ body {
   z-index: 100;
 }
 
-/* LEFT */
 .nav-left {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 .logo-badge {
@@ -52,7 +58,6 @@ body {
   margin-left: 6px;
 }
 
-/* CENTER */
 .nav-center {
   display: flex;
   gap: 40px;
@@ -74,13 +79,6 @@ body {
 
 .status-indicator.online {
   color: #22C55E;
-}
-
-/* RIGHT */
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 20px;
 }
 
 .camera-select {
@@ -115,130 +113,290 @@ body {
   background: #2563EB;
 }
 
-/* ===== SINGLE CAMERA DASHBOARD ===== */
-.dashboard {
+.signout-btn {
+  background: transparent;
+  border: 1px solid #4B5563;
+  color: #9CA3AF;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.signout-btn:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: #EF4444;
+  color: #F87171;
+}
+
+/* ===== MAIN LAYOUT WRAPPER ===== */
+.main-wrapper {
   display: flex;
-  padding: 24px;
-  gap: 24px;
-  min-height: calc(100vh - 120px);
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 24px 28px;
   box-sizing: border-box;
 }
 
-.live-feed {
-  flex: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+/* ===== ROW 1: Camera + Right Panels ===== */
+.row-top {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
+  align-items: start;
 }
 
-.live-feed h3 {
-  margin: 0;
-  font-size: 14px;
+/* Camera column */
+.camera-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-label {
+  font-size: 12px;
   font-weight: 600;
-  color: #9CA3AF;
+  color: #6B7280;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
-/* Fixed video box with proper dimensions */
+/* Fixed camera feed box */
 .video-box {
   background: #101827;
   border: 1px solid #1F2937;
   border-radius: 12px;
   width: 100%;
-  height: 420px;
+  height: 400px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .video-box .feed-label {
-  color: #4B5563;
+  color: #374151;
   font-size: 15px;
 }
 
-.status-panel {
-  flex: 1;
-  padding-left: 4px;
+/* ===== RIGHT PANELS COLUMN (Transaction + Error) ===== */
+.right-panels {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
-.status {
-  padding: 15px;
-  border-radius: 8px;
-  font-weight: 700;
-  text-align: center;
-  letter-spacing: 1px;
-}
-
-.normal   { background: #166534; color: #4ADE80; }
-.medium   { background: #854D0E; color: #FACC15; }
-.abnormal { background: #7F1D1D; color: #F87171; }
-
-/* alert popup */
-.popup {
-  position: fixed;
-  top: 30%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #7F1D1D;
-  border: 1px solid #EF4444;
-  padding: 20px 28px;
-  border-radius: 12px;
-  z-index: 9999;
-  text-align: center;
-  min-width: 260px;
-  box-shadow: 0 0 30px rgba(239, 68, 68, 0.4);
-}
-
-.hidden {
-  display: none !important;
-}
-
-/* ===== POS SECTION ===== */
-.pos-section {
-  padding: 0 24px 24px;
-}
-
-.pos-section h3 {
-  font-size: 14px;
-  color: #9CA3AF;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 10px;
-}
-
-/* ===== ALL CAMERAS SECTION ===== */
-.all-cameras-section {
-  padding: 24px;
-}
-
-.all-cameras-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #9CA3AF;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin: 0 0 20px 0;
-}
-
-/* Grid: 2 columns, responsive */
-.cameras-grid {
+/* ===== ROW 2: Billing + Person Logs ===== */
+.row-bottom {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
+  /* Clear gap from billing card to person card is handled by grid-column-gap */
 }
 
-/* Each tile */
-.camera-tile {
+/* ===== SHARED LOG CARD ===== */
+.log-card {
   background: #101827;
   border: 1px solid #1F2937;
   border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Card header */
+.log-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #0F172A;
+  border-bottom: 1px solid #1F2937;
+  flex-shrink: 0;
+}
+
+.log-card-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.log-count-badge {
+  background: #1F2937;
+  color: #6B7280;
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+/* Scrollable body of each card */
+.log-scroll {
+  overflow-y: auto;
+  flex: 1;
+  padding: 8px 0;
+  scrollbar-width: thin;
+  scrollbar-color: #1F2937 transparent;
+}
+
+.log-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.log-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.log-scroll::-webkit-scrollbar-thumb {
+  background: #1F2937;
+  border-radius: 4px;
+}
+
+/* ===== SPECIFIC CARD HEIGHTS ===== */
+.transaction-card .log-scroll {
+  height: 210px;
+}
+
+.error-card .log-scroll {
+  height: 150px;
+}
+
+.billing-card .log-scroll {
+  height: 160px;
+}
+
+.person-card .log-scroll {
+  height: 160px;
+}
+
+/* ===== TRANSACTION ROW ===== */
+.txn-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-bottom: 1px solid #0F172A;
+  transition: background 0.15s;
+  font-size: 13px;
+}
+
+.txn-row:last-child {
+  border-bottom: none;
+}
+
+.txn-row:hover {
+  background: #0F172A;
+}
+
+.txn-time {
+  font-size: 11px;
+  color: #4B5563;
+  white-space: nowrap;
+  min-width: 58px;
+  font-variant-numeric: tabular-nums;
+}
+
+.txn-msg {
+  flex: 1;
+  color: #D1D5DB;
+  font-size: 12px;
+}
+
+.txn-msg.muted {
+  color: #374151;
+}
+
+/* ===== TRANSACTION COLOR STRIPES & BADGES ===== */
+.txn-green {
+  border-left: 3px solid #22C55E;
+}
+
+.txn-yellow {
+  border-left: 3px solid #FACC15;
+}
+
+.txn-red {
+  border-left: 3px solid #EF4444;
+  background: rgba(239, 68, 68, 0.04);
+}
+
+.txn-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+
+.txn-badge.green {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ADE80;
+}
+
+.txn-badge.yellow {
+  background: rgba(250, 204, 21, 0.15);
+  color: #FACC15;
+}
+
+.txn-badge.red {
+  background: rgba(239, 68, 68, 0.15);
+  color: #F87171;
+}
+
+/* Placeholder rows (loading state) */
+.txn-placeholder {
+  border-left: 3px solid #1F2937;
+}
+
+/* ===== TRANSACTION LEGEND ===== */
+.txn-legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #6B7280;
+}
+
+.legend-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.legend-dot.green {
+  background: #22C55E;
+}
+
+.legend-dot.yellow {
+  background: #FACC15;
+}
+
+.legend-dot.red {
+  background: #EF4444;
+}
+
+.legend-text {
+  margin-right: 5px;
+}
+
+/* ===== ALL CAMERAS GRID ===== */
+.cameras-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.camera-tile {
+  background: #101827;
+  border: 1px solid #1F2937;
+  border-radius: 10px;
   overflow: hidden;
   position: relative;
   transition: border-color 0.25s, box-shadow 0.25s;
@@ -246,37 +404,42 @@ body {
 
 .camera-tile:hover {
   border-color: #3B82F6;
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 0 18px rgba(59, 130, 246, 0.2);
 }
 
-/* Tile header bar */
 .camera-tile-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 14px;
+  padding: 8px 12px;
   background: #0F172A;
   border-bottom: 1px solid #1F2937;
 }
 
 .cam-label {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
 }
 
 .cam-status-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
 }
 
-.cam-status-dot.online  { background: #22C55E; box-shadow: 0 0 6px #22C55E; }
-.cam-status-dot.offline { background: #EF4444; box-shadow: 0 0 6px #EF4444; }
+.cam-status-dot.online {
+  background: #22C55E;
+  box-shadow: 0 0 5px #22C55E;
+}
 
-/* Feed area inside tile - fixed height */
+.cam-status-dot.offline {
+  background: #EF4444;
+  box-shadow: 0 0 5px #EF4444;
+}
+
 .camera-tile-feed {
   width: 100%;
-  height: 260px;
+  height: 185px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -287,36 +450,45 @@ body {
 
 .feed-placeholder {
   color: #374151;
-  font-size: 14px;
+  font-size: 13px;
 }
 
-/* Hover overlay (maximize button) */
+/* Hover overlay — pointer-events off so tile header buttons stay clickable */
 .tile-hover-overlay {
   position: absolute;
-  inset: 0;
-  background: rgba(11, 18, 32, 0.7);
+  /* Only cover the feed area, not the header */
+  top: 41px;
+  /* header height */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(11, 18, 32, 0.72);
   display: flex;
   justify-content: center;
   align-items: center;
   opacity: 0;
+  pointer-events: none;
+  /* CRITICAL: don't block header clicks */
   transition: opacity 0.2s ease;
   cursor: pointer;
 }
 
 .camera-tile:hover .tile-hover-overlay {
   opacity: 1;
+  pointer-events: all;
+  /* restore on hover so Maximize is clickable */
 }
 
 .maximize-btn {
   background: #3B82F6;
   color: white;
-  padding: 10px 22px;
+  padding: 9px 20px;
   border-radius: 8px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
-  transform: translateY(6px);
+  transform: translateY(5px);
   transition: transform 0.2s ease, background 0.2s;
-  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 4px 18px rgba(59, 130, 246, 0.4);
 }
 
 .camera-tile:hover .maximize-btn {
@@ -339,8 +511,15 @@ body {
 }
 
 @keyframes fadeInModal {
-  from { opacity: 0; transform: scale(0.97); }
-  to   { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .modal-topbar {
@@ -371,8 +550,14 @@ body {
   display: inline-block;
 }
 
-.modal-status-dot.online  { background: #22C55E; box-shadow: 0 0 8px #22C55E; }
-.modal-status-dot.offline { background: #EF4444; }
+.modal-status-dot.online {
+  background: #22C55E;
+  box-shadow: 0 0 8px #22C55E;
+}
+
+.modal-status-dot.offline {
+  background: #EF4444;
+}
 
 .modal-status-text {
   font-size: 12px;
@@ -381,7 +566,6 @@ body {
   letter-spacing: 1px;
 }
 
-/* Minimize / Go Back button */
 .minimize-btn {
   background: transparent;
   border: 1px solid #374151;
@@ -400,7 +584,6 @@ body {
   border-color: #6B7280;
 }
 
-/* Main feed area of modal */
 .modal-feed-area {
   flex: 1;
   display: flex;
@@ -439,4 +622,260 @@ kbd {
   font-family: inherit;
   font-size: 11px;
   border: 1px solid #374151;
+}
+
+/* ===== THEFT ALERT POPUP ===== */
+.theft-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #0F172A;
+  border: 1.5px solid #EF4444;
+  border-radius: 14px;
+  z-index: 10000;
+  min-width: 340px;
+  max-width: 420px;
+  box-shadow: 0 0 40px rgba(239, 68, 68, 0.45),
+    0 0 80px rgba(239, 68, 68, 0.2);
+  animation: pulseAlert 1.5s ease-in-out infinite;
+  overflow: hidden;
+}
+
+@keyframes pulseAlert {
+
+  0%,
+  100% {
+    box-shadow: 0 0 30px rgba(239, 68, 68, 0.4), 0 0 70px rgba(239, 68, 68, 0.15);
+  }
+
+  50% {
+    box-shadow: 0 0 50px rgba(239, 68, 68, 0.7), 0 0 120px rgba(239, 68, 68, 0.3);
+  }
+}
+
+.theft-popup-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  background: #7F1D1D;
+  border-bottom: 1px solid #EF4444;
+}
+
+.theft-icon {
+  font-size: 20px;
+}
+
+.theft-title {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 800;
+  color: #FCA5A5;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.theft-close-btn {
+  background: transparent;
+  border: none;
+  color: #EF4444;
+  font-size: 17px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px 5px;
+}
+
+.theft-close-btn:hover {
+  color: #F87171;
+}
+
+.theft-popup-body {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.theft-message {
+  font-size: 15px;
+  font-weight: 600;
+  color: #FCA5A5;
+  margin: 0;
+}
+
+.theft-confidence {
+  font-size: 12px;
+  color: #9CA3AF;
+  margin: 0;
+}
+
+.theft-timestamp {
+  font-size: 11px;
+  color: #4B5563;
+  margin: 0;
+}
+
+.theft-popup-footer {
+  padding: 12px 20px;
+  border-top: 1px solid #1F2937;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.dismiss-btn {
+  background: #7F1D1D;
+  border: 1px solid #EF4444;
+  color: #FCA5A5;
+  padding: 7px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.dismiss-btn:hover {
+  background: #991B1B;
+}
+
+/* ===== LEGACY POPUP ===== */
+.popup {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #7F1D1D;
+  border: 1px solid #EF4444;
+  padding: 20px 28px;
+  border-radius: 12px;
+  z-index: 9999;
+  text-align: center;
+  min-width: 260px;
+  box-shadow: 0 0 30px rgba(239, 68, 68, 0.4);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ===== FEED TOOLBAR (single camera) ===== */
+.feed-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2px;
+}
+
+/* "📁 Load Video" button — single camera */
+.load-video-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #1F2937;
+  color: #9CA3AF;
+  border: 1px solid #374151;
+  padding: 5px 12px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.load-video-btn:hover {
+  background: #374151;
+  color: #E5E7EB;
+  border-color: #4B5563;
+}
+
+/* "📁" icon-only button on each tile header */
+.tile-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tile-load-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: #1F2937;
+  border: 1px solid #374151;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  user-select: none;
+}
+
+.tile-load-btn:hover {
+  background: #374151;
+  border-color: #4B5563;
+}
+
+/* ===== VIDEO ELEMENTS INSIDE FEED AREAS ===== */
+.feed-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+  border-radius: 0;
+}
+
+/* Video inside the fullscreen modal */
+.feed-video-modal {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+/* ===== ALL CAMERAS SHARED CONTROL BAR ===== */
+.all-cams-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 4px 2px;
+}
+
+.all-cams-play-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #3B82F6;
+  border: none;
+  color: white;
+  padding: 8px 22px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s, transform 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.all-cams-play-btn:hover:not(:disabled) {
+  background: #2563EB;
+  transform: translateY(-1px);
+}
+
+.all-cams-play-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.all-cams-play-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  background: #374151;
+}
+
+.all-cams-hint {
+  font-size: 11px;
+  color: #4B5563;
 }

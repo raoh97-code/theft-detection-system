@@ -12,8 +12,8 @@
 
 <body>
 
+  <!-- ===== NAVBAR ===== -->
   <div class="navbar">
-
     <div class="nav-left">
       <div class="logo-badge">✓</div>
       <div class="brand">
@@ -25,16 +25,12 @@
     <div class="nav-center">
       <div class="status-group">
         <span class="label">SYSTEM STATUS</span>
-        <span id="backendStatus" class="status-indicator offline">
-          ● Checking...
-        </span>
+        <span id="backendStatus" class="status-indicator offline">● Checking...</span>
       </div>
-
       <div class="info-group">
         <span class="label">ACTIVE CAMERAS</span>
         <span id="cameraCount">02 / 02</span>
       </div>
-
       <div class="info-group">
         <span class="label">TIME (LOCAL)</span>
         <span id="localTime">--:--:--</span>
@@ -47,70 +43,189 @@
         <option value="cam2">Camera 2</option>
         <option value="all">All Cameras</option>
       </select>
-
       <button class="run-btn" onclick="runAnalysis()">▶ Run Analysis</button>
-    </div>
-
-  </div>
-
-  <!-- ===== SINGLE CAMERA VIEW ===== -->
-  <div id="singleCameraView" class="dashboard">
-
-    <div class="live-feed">
-      <h3>Live Camera</h3>
-      <div class="video-box">
-        <span class="feed-label">📷 Camera Feed</span>
-      </div>
-    </div>
-
-    <div class="status-panel">
-      <div id="systemStatus" class="status normal">NORMAL</div>
-
-      <div id="popupAlert" class="popup hidden">
-        <h2>🚨 ALERT</h2>
-        <p id="alertType"></p>
-        <p id="alertConfidence"></p>
-      </div>
-
-      <div id="personStatus">Person: --</div>
-      <div id="drawerStatus">Drawer: --</div>
-    </div>
-
-  </div>
-
-  <!-- ===== ALL CAMERAS GRID VIEW ===== -->
-  <div id="allCamerasView" class="all-cameras-section hidden">
-    <h3 class="all-cameras-title">All Camera Feeds</h3>
-    <div class="cameras-grid" id="camerasGrid">
-
-      <div class="camera-tile" id="tile-cam1">
-        <div class="camera-tile-header">
-          <span class="cam-label">📷 Camera 1</span>
-          <span class="cam-status-dot online"></span>
-        </div>
-        <div class="camera-tile-feed">
-          <span class="feed-placeholder">Camera 1 Feed</span>
-        </div>
-        <div class="tile-hover-overlay" onclick="maximizeCam('cam1', 'Camera 1')">
-          <div class="maximize-btn">⛶ Maximize</div>
-        </div>
-      </div>
-
-      <div class="camera-tile" id="tile-cam2">
-        <div class="camera-tile-header">
-          <span class="cam-label">📷 Camera 2</span>
-          <span class="cam-status-dot online"></span>
-        </div>
-        <div class="camera-tile-feed">
-          <span class="feed-placeholder">Camera 2 Feed</span>
-        </div>
-        <div class="tile-hover-overlay" onclick="maximizeCam('cam2', 'Camera 2')">
-          <div class="maximize-btn">⛶ Maximize</div>
-        </div>
-      </div>
-
+      <button class="signout-btn" onclick="signOut()" title="Sign Out">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          style="vertical-align:-2px;flex-shrink:0">
+          <!-- door frame -->
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <!-- arrow pointing right (out) -->
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" y1="12" x2="9" y2="12" />
+        </svg>
+        Sign Out
+      </button>
     </div>
   </div>
+
+  <!-- ===== MAIN CONTENT WRAPPER ===== -->
+  <div class="main-wrapper">
+
+    <!-- ===== ROW 1: Camera Feed + Transaction/Error Panels ===== -->
+    <div class="row-top">
+
+      <!-- LEFT: Single Camera View (one sub-section per camera) -->
+      <div id="singleCameraView" class="camera-col">
+
+        <!-- Camera 1 sub-section (shown by default) -->
+        <div id="singleCam1" class="single-cam-section">
+          <div class="feed-toolbar">
+            <span class="section-label">📷 Camera 1 — Live Feed</span>
+            <label class="load-video-btn" for="fileSingleCam1">📁 Load Video</label>
+            <input type="file" id="fileSingleCam1" class="hidden" accept="video/*"
+              onchange="loadVideoFile('videoSingleCam1', this)">
+          </div>
+          <div class="video-box">
+            <video id="videoSingleCam1" class="feed-video hidden" controls></video>
+            <span id="labelSingleCam1" class="feed-label">📷 Camera 1 Feed</span>
+          </div>
+        </div>
+
+        <!-- Camera 2 sub-section (hidden by default) -->
+        <div id="singleCam2" class="single-cam-section hidden">
+          <div class="feed-toolbar">
+            <span class="section-label">📷 Camera 2 — Live Feed</span>
+            <label class="load-video-btn" for="fileSingleCam2">📁 Load Video</label>
+            <input type="file" id="fileSingleCam2" class="hidden" accept="video/*"
+              onchange="loadVideoFile('videoSingleCam2', this)">
+          </div>
+          <div class="video-box">
+            <video id="videoSingleCam2" class="feed-video hidden" controls></video>
+            <span id="labelSingleCam2" class="feed-label">📷 Camera 2 Feed</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- LEFT: All Cameras Grid View (hidden by default) -->
+      <div id="allCamerasView" class="camera-col hidden">
+        <div class="section-label">All Camera Feeds</div>
+        <div class="cameras-grid" id="camerasGrid">
+          <div class="camera-tile" id="tile-cam1">
+            <div class="camera-tile-header">
+              <span class="cam-label">📷 Camera 1</span>
+              <div class="tile-header-right">
+                <label class="tile-load-btn" for="fileCam1" title="Load video file">📁</label>
+                <input type="file" id="fileCam1" class="hidden" accept="video/*"
+                  onchange="loadVideoFile('videoCam1', this)">
+                <span class="cam-status-dot online"></span>
+              </div>
+            </div>
+            <div class="camera-tile-feed">
+              <video id="videoCam1" class="feed-video hidden"></video>
+              <span id="labelCam1" class="feed-placeholder">Camera 1 Feed</span>
+            </div>
+            <div class="tile-hover-overlay" onclick="maximizeCam('cam1', 'Camera 1', 'videoCam1')">
+              <div class="maximize-btn">⛶ Maximize</div>
+            </div>
+          </div>
+          <div class="camera-tile" id="tile-cam2">
+            <div class="camera-tile-header">
+              <span class="cam-label">📷 Camera 2</span>
+              <div class="tile-header-right">
+                <label class="tile-load-btn" for="fileCam2" title="Load video file">📁</label>
+                <input type="file" id="fileCam2" class="hidden" accept="video/*"
+                  onchange="loadVideoFile('videoCam2', this)">
+                <span class="cam-status-dot online"></span>
+              </div>
+            </div>
+            <div class="camera-tile-feed">
+              <video id="videoCam2" class="feed-video hidden"></video>
+              <span id="labelCam2" class="feed-placeholder">Camera 2 Feed</span>
+            </div>
+            <div class="tile-hover-overlay" onclick="maximizeCam('cam2', 'Camera 2', 'videoCam2')">
+              <div class="maximize-btn">⛶ Maximize</div>
+            </div>
+          </div>
+        </div>
+        <!-- Shared play/pause control bar for all-cameras grid -->
+        <div class="all-cams-controls" id="allCamsControls">
+          <button id="allCamsPlayBtn" class="all-cams-play-btn" onclick="toggleAllCamsPlayback()" disabled>
+            <span id="allCamsPlayIcon">▶</span>
+            <span id="allCamsPlayLabel">Play All</span>
+          </button>
+          <span class="all-cams-hint">Load a video file in each camera to enable playback</span>
+        </div>
+      </div>
+
+      <!-- RIGHT: Transaction Overview + Previous Errors stacked -->
+      <div class="right-panels">
+
+        <!-- Transaction Overview Card -->
+        <div class="log-card transaction-card">
+          <div class="log-card-header">
+            <span class="log-card-title">📊 Transaction Overview</span>
+            <div class="txn-legend">
+              <span class="legend-dot green"></span><span class="legend-text">Legit</span>
+              <span class="legend-dot yellow"></span><span class="legend-text">Suspicious</span>
+              <span class="legend-dot red"></span><span class="legend-text">Theft</span>
+            </div>
+          </div>
+          <div class="log-scroll" id="transactionList">
+            <!-- Populated by JS — placeholder rows shown during dev -->
+            <div class="txn-row txn-green">
+              <span class="txn-time">--:--:--</span>
+              <span class="txn-badge green">● Legitimate</span>
+              <span class="txn-msg">Awaiting transaction data...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Previous Errors Card -->
+        <div class="log-card error-card">
+          <div class="log-card-header">
+            <span class="log-card-title">🔴 Previous Error Logs</span>
+            <span class="log-count-badge" id="errorCount">0 errors</span>
+          </div>
+          <div class="log-scroll" id="errorList">
+            <!-- Populated by JS -->
+            <div class="txn-row txn-placeholder">
+              <span class="txn-time">--:--:--</span>
+              <span class="txn-msg muted">No errors recorded yet.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== ROW 2: Billing Logs + Person Logs ===== -->
+    <div class="row-bottom">
+
+      <!-- Billing Logs Card -->
+      <div class="log-card billing-card">
+        <div class="log-card-header">
+          <span class="log-card-title">🧾 Billing Logs</span>
+          <span class="log-count-badge" id="billingCount">0 entries</span>
+        </div>
+        <div class="log-scroll" id="billingList">
+          <!-- Populated by JS -->
+          <div class="txn-row txn-placeholder">
+            <span class="txn-time">--:--:--</span>
+            <span class="txn-msg muted">Awaiting billing data...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Person Logs Card -->
+      <div class="log-card person-card">
+        <div class="log-card-header">
+          <span class="log-card-title">🧑 Person Logs</span>
+          <span class="log-count-badge" id="personCount">0 entries</span>
+        </div>
+        <div class="log-scroll" id="personList">
+          <!-- Populated by JS -->
+          <div class="txn-row txn-placeholder">
+            <span class="txn-time">--:--:--</span>
+            <span class="txn-msg muted">Awaiting person detection data...</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- end .main-wrapper -->
 
   <!-- ===== MAXIMIZE MODAL ===== -->
   <div id="maximizeModal" class="maximize-modal hidden">
@@ -123,6 +238,7 @@
       </div>
     </div>
     <div class="modal-feed-area">
+      <video id="modalVideo" class="feed-video-modal hidden" controls></video>
       <span class="feed-placeholder-large" id="modalFeedLabel">Camera Feed</span>
     </div>
     <div class="modal-footer">
@@ -130,9 +246,28 @@
     </div>
   </div>
 
-  <div class="pos-section">
-    <h3>POS Logs</h3>
-    <ul id="posList"></ul>
+  <!-- ===== THEFT ALERT POPUP ===== -->
+  <div id="theftAlertPopup" class="theft-popup hidden">
+    <div class="theft-popup-header">
+      <span class="theft-icon">🚨</span>
+      <span class="theft-title">UNAUTHORIZED ACCESS DETECTED</span>
+      <button class="theft-close-btn" onclick="dismissTheftAlert()">✕</button>
+    </div>
+    <div class="theft-popup-body">
+      <p id="theftMessage" class="theft-message">Theft detected at register.</p>
+      <p id="theftConfidence" class="theft-confidence"></p>
+      <p id="theftTimestamp" class="theft-timestamp"></p>
+    </div>
+    <div class="theft-popup-footer">
+      <button class="dismiss-btn" onclick="dismissTheftAlert()">Dismiss</button>
+    </div>
+  </div>
+
+  <!-- Legacy popup (kept for backward-compat with existing JS) -->
+  <div id="popupAlert" class="popup hidden">
+    <h2>🚨 ALERT</h2>
+    <p id="alertType"></p>
+    <p id="alertConfidence"></p>
   </div>
 
   <script src="js/api.js"></script>
