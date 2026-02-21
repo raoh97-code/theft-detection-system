@@ -367,9 +367,18 @@ function fmtTime(ts) {
 /* ===================================== */
 
 /**
- * Expected billing log shape (MongoDB/JSON):
- * { _id, timestamp: ISOString, item: string, amount: number, cashier?: string }
+ * POS billing log shape:
+ * { timestamp, type: 'amount_entered'|'drawer_open'|'cash_taken'|'giving_change'|'change_given',
+ *   item, amount, cashier }
  */
+const BILLING_TYPE_LABELS = {
+  amount_entered: { label: 'Amount Entered', css: 'txn-green' },
+  drawer_open: { label: 'Drawer Opened', css: 'txn-yellow' },
+  cash_taken: { label: 'Cash Taken', css: 'txn-green' },
+  giving_change: { label: 'Giving Change', css: 'txn-placeholder' },
+  change_given: { label: 'Change Given', css: 'txn-green' },
+};
+
 function renderBillingLogs(logs) {
   const el = billingList;
   if (!logs || logs.length === 0) {
@@ -383,13 +392,19 @@ function renderBillingLogs(logs) {
 
   el.innerHTML = '';
   logs.slice().reverse().forEach(log => {
+    const meta = BILLING_TYPE_LABELS[log.type] || { label: log.type || 'Event', css: 'txn-placeholder' };
     const row = document.createElement('div');
-    row.className = 'txn-row txn-green';
+    row.className = `txn-row ${meta.css}`;
+
+    let detail = '';
+    if (log.item) detail += log.item;
+    if (log.amount != null) detail += (detail ? ' — ' : '') + `₹${(log.amount).toFixed(2)}`;
+    if (log.cashier) detail += ` <span style="color:#4B5563"> · ${log.cashier}</span>`;
+
     row.innerHTML = `
       <span class="txn-time">${fmtTime(log.timestamp)}</span>
-      <span class="txn-msg">${log.item || 'Item'} — ₹${(log.amount ?? 0).toFixed(2)}
-        ${log.cashier ? `<span style="color:#4B5563"> · ${log.cashier}</span>` : ''}
-      </span>`;
+      <span class="txn-badge green">${meta.label}</span>
+      <span class="txn-msg">${detail || '—'}</span>`;
     el.appendChild(row);
   });
 
@@ -401,9 +416,16 @@ function renderBillingLogs(logs) {
 /* ===================================== */
 
 /**
- * Expected person log shape (MongoDB/JSON):
- * { _id, timestamp: ISOString, event: string, camera?: string, confidence?: number }
+ * Person event shape (filtered from events.json where category === 'person'):
+ * { timestamp, type: 'person_enter'|'person_exit'|'authorised_enter',
+ *   label, camera, confidence, message }
  */
+const PERSON_TYPE_CSS = {
+  authorised_enter: 'txn-green',
+  person_enter: 'txn-placeholder',
+  person_exit: 'txn-placeholder',
+};
+
 function renderPersonLogs(logs) {
   const el = personList;
   if (!logs || logs.length === 0) {
@@ -417,14 +439,15 @@ function renderPersonLogs(logs) {
 
   el.innerHTML = '';
   logs.slice().reverse().forEach(log => {
-    const row = document.createElement('div');
-    row.className = 'txn-row txn-placeholder';
-    const conf = log.confidence !== undefined ? ` (${log.confidence}%)` : '';
+    const css = PERSON_TYPE_CSS[log.type] || 'txn-placeholder';
+    const conf = log.confidence !== undefined ? ` · ${log.confidence}%` : '';
     const cam = log.camera ? ` · ${log.camera}` : '';
+    const row = document.createElement('div');
+    row.className = `txn-row ${css}`;
     row.innerHTML = `
       <span class="txn-time">${fmtTime(log.timestamp)}</span>
-      <span class="txn-msg">${log.event || 'Event'}${conf}
-        <span style="color:#4B5563">${cam}</span>
+      <span class="txn-msg">${log.label || log.type || 'Event'}
+        <span style="color:#4B5563">${cam}${conf}</span>
       </span>`;
     el.appendChild(row);
   });
@@ -437,8 +460,12 @@ function renderPersonLogs(logs) {
 /* ===================================== */
 
 /**
- * Expected transaction shape (MongoDB/JSON):
- * { _id, timestamp: ISOString, type: 'legitimate'|'suspicious'|'theft', message: string, confidence?: number }
+ * Transaction event shape (filtered from events.json where category === 'transaction'):
+ * { timestamp, type: 'authorised_transaction'|'suspicious'|'theft',
+ *   label, message, confidence, camera }
+ * Maps to: authorised_transaction → green/Legitimate
+ *          suspicious             → yellow/Suspicious
+ *          theft                  → red/Theft Detected
  */
 function renderTransactions(txns) {
   const el = transactionList;
@@ -458,22 +485,25 @@ function renderTransactions(txns) {
     let badgeClass = '';
     let badgeText = '';
 
-    if (txn.type === 'legitimate') {
+    if (txn.type === 'authorised_transaction') {
       cssClass = 'txn-green'; badgeClass = 'green'; badgeText = '● Legitimate';
     } else if (txn.type === 'suspicious') {
       cssClass = 'txn-yellow'; badgeClass = 'yellow'; badgeText = '⚠ Suspicious';
     } else if (txn.type === 'theft') {
-      cssClass = 'txn-red'; badgeClass = 'red'; badgeText = '🔴 Theft';
+      cssClass = 'txn-red'; badgeClass = 'red'; badgeText = '🔴 Theft Detected';
       if (!lastTheft) lastTheft = txn;
     }
 
     const conf = txn.confidence !== undefined ? ` · ${txn.confidence}%` : '';
+    const cam = txn.camera ? ` · ${txn.camera}` : '';
     const row = document.createElement('div');
     row.className = `txn-row ${cssClass}`;
     row.innerHTML = `
       <span class="txn-time">${fmtTime(txn.timestamp)}</span>
       <span class="txn-badge ${badgeClass}">${badgeText}</span>
-      <span class="txn-msg">${txn.message || '—'}${conf}</span>`;
+      <span class="txn-msg">${txn.message || txn.label || '—'}${conf}
+        <span style="color:#4B5563">${cam}</span>
+      </span>`;
     el.appendChild(row);
   });
 
@@ -489,16 +519,16 @@ function renderTransactions(txns) {
 /* ===================================== */
 
 /**
- * Error logs are a filtered subset of transactions where type === 'theft'
- * OR they can come from their own endpoint:
- * { _id, timestamp: ISOString, type: string, message: string, camera?: string }
+ * Error logs = transaction events where type === 'theft'
+ * (client-side filtered from the full transaction event list)
+ * Shape: { timestamp, type: 'theft', label, message, confidence, camera }
  */
 function renderErrorLogs(errors) {
   const el = errorList;
   if (!errors || errors.length === 0) {
     el.innerHTML = `<div class="txn-row txn-placeholder">
       <span class="txn-time">--:--:--</span>
-      <span class="txn-msg muted">No errors recorded yet.</span>
+      <span class="txn-msg muted">No theft events recorded yet.</span>
     </div>`;
     document.getElementById('errorCount').textContent = '0 errors';
     return;
@@ -506,32 +536,32 @@ function renderErrorLogs(errors) {
 
   el.innerHTML = '';
   errors.slice().reverse().forEach(err => {
-    const isTheft = err.type === 'theft';
-    const row = document.createElement('div');
+    const conf = err.confidence !== undefined ? ` · ${err.confidence}%` : '';
     const cam = err.camera ? ` · ${err.camera}` : '';
-    row.className = `txn-row ${isTheft ? 'txn-red' : 'txn-yellow'}`;
+    const row = document.createElement('div');
+    row.className = 'txn-row txn-red';
     row.innerHTML = `
       <span class="txn-time">${fmtTime(err.timestamp)}</span>
-      <span class="txn-badge ${isTheft ? 'red' : 'yellow'}">${isTheft ? '🔴 Theft' : '⚠ Error'}</span>
-      <span class="txn-msg">${err.message || err.type || '—'}
+      <span class="txn-badge red">🔴 Theft Detected</span>
+      <span class="txn-msg">${err.message || err.label || '—'}${conf}
         <span style="color:#4B5563">${cam}</span>
       </span>`;
     el.appendChild(row);
   });
 
-  document.getElementById('errorCount').textContent = errors.length + ' errors';
+  document.getElementById('errorCount').textContent = errors.length + ' error' + (errors.length !== 1 ? 's' : '');
 }
 
 /* ===================================== */
 /* THEFT ALERT POPUP                     */
 /* ===================================== */
 
-function showTheftAlert(txn) {
+function showTheftAlert(alert) {
   const popup = document.getElementById('theftAlertPopup');
-  document.getElementById('theftMessage').textContent = txn.message || 'Unauthorized access detected.';
-  document.getElementById('theftConfidence').textContent = txn.confidence !== undefined
-    ? 'Confidence: ' + txn.confidence + '%' : '';
-  document.getElementById('theftTimestamp').textContent = fmtTime(txn.timestamp);
+  document.getElementById('theftMessage').textContent = alert.message || 'Unauthorized access detected.';
+  document.getElementById('theftConfidence').textContent = alert.confidence !== undefined
+    ? 'Confidence: ' + alert.confidence + '%' : '';
+  document.getElementById('theftTimestamp').textContent = fmtTime(alert.timestamp);
 
   popup.classList.remove('hidden');
   playTheftAlarm();
@@ -562,31 +592,36 @@ function showPopup(alert) {
 
 async function fetchData() {
   try {
-    // ── Transaction overview + error logs ──────────────────────────
-    // TODO: replace with real endpoint when backend is ready
-    // const txnRes    = await fetch(`${BASE_URL}/transactions`);
-    // const txns      = await txnRes.json();
-    // renderTransactions(txns);
-    // renderErrorLogs(txns.filter(t => t.type === 'theft' || t.type === 'suspicious'));
 
-    // ── Billing logs ───────────────────────────────────────────────
-    // TODO: replace with real endpoint
-    // const billRes  = await fetch(`${BASE_URL}/billing-logs`);
-    // const bills    = await billRes.json();
-    // renderBillingLogs(bills);
+    // ── Fetch all three data sources in parallel ───────────────────
+    const [alertsRes, eventsRes, posRes] = await Promise.all([
+      fetch(`${BASE_URL}/alerts`),
+      fetch(`${BASE_URL}/events`),
+      fetch(`${BASE_URL}/pos-logs`),
+    ]);
 
-    // ── Person logs ────────────────────────────────────────────────
-    // TODO: replace with real endpoint
-    // const personRes = await fetch(`${BASE_URL}/person-logs`);
-    // const persons   = await personRes.json();
-    // renderPersonLogs(persons);
-
-    // ── Legacy alerts/events (existing behaviour) ──────────────────
-    const alertsRes = await fetch(`${BASE_URL}/alerts`);
-    const eventsRes = await fetch(`${BASE_URL}/events`);
     const alerts = await alertsRes.json();
     const events = await eventsRes.json();
+    const posLogs = await posRes.json();
 
+    // ── Billing Logs ── pos_logs.json ──────────────────────────────
+    renderBillingLogs(posLogs);
+
+    // ── Split events by category ───────────────────────────────────
+    const personEvents = events.filter(e => e.category === 'person');
+    const txnEvents = events.filter(e => e.category === 'transaction');
+    const theftEvents = txnEvents.filter(e => e.type === 'theft');
+
+    // ── Person Logs ────────────────────────────────────────────────
+    renderPersonLogs(personEvents);
+
+    // ── Transaction Overview ───────────────────────────────────────
+    renderTransactions(txnEvents);
+
+    // ── Previous Error Logs (theft only from transactions) ─────────
+    renderErrorLogs(theftEvents);
+
+    // ── Legacy status badge + popup (driven by alerts.json) ────────
     if (events.length > 0) {
       const last = events[events.length - 1];
       if (personElement)
@@ -597,6 +632,7 @@ async function fetchData() {
 
     if (alerts && alerts.length > 0) {
       if (statusElement) { statusElement.className = 'status abnormal'; statusElement.innerText = 'ABNORMAL'; }
+      // Legacy popup — fires only once per unique alert timestamp
       const latestAlert = alerts[alerts.length - 1];
       if (latestAlert.time !== lastAlertTime) {
         lastAlertTime = latestAlert.time;
