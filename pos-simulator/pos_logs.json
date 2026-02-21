@@ -1,170 +1,44 @@
 [
   {
-    "timestamp": "2026-02-21T05:01:00.000Z",
+    "timestamp": "2026-02-21T05:00:08.000Z",
     "type": "amount_entered",
-    "item": "Milk 1L",
-    "amount": 62.00,
-    "cashier": "Priya Sharma"
+    "item": "Powder",
+    "amount": 200.00,
+    "cashier": "Yash"
   },
   {
     "timestamp": "2026-02-21T05:01:08.000Z",
     "type": "drawer_open",
     "item": null,
     "amount": null,
-    "cashier": "Priya Sharma"
+    "cashier": "Yash"
   },
   {
     "timestamp": "2026-02-21T05:01:15.000Z",
     "type": "cash_taken",
-    "item": "Milk 1L",
-    "amount": 100.00,
-    "cashier": "Priya Sharma"
+    "item": "Powder",
+    "amount": 300.00,
+    "cashier": "Yash"
   },
   {
     "timestamp": "2026-02-21T05:01:20.000Z",
     "type": "giving_change",
     "item": null,
-    "amount": 38.00,
-    "cashier": "Priya Sharma"
+    "amount": 100.00,
+    "cashier": "Yash"
   },
   {
     "timestamp": "2026-02-21T05:01:25.000Z",
-    "type": "change_given",
+    "type": "change_not_given",
     "item": null,
-    "amount": 38.00,
-    "cashier": "Priya Sharma"
-  },
-  {
-    "timestamp": "2026-02-21T05:04:40.000Z",
-    "type": "amount_entered",
-    "item": "Bread Loaf",
-    "amount": 45.00,
-    "cashier": "Priya Sharma"
-  },
-  {
-    "timestamp": "2026-02-21T05:04:47.000Z",
-    "type": "drawer_open",
-    "item": null,
-    "amount": null,
-    "cashier": "Priya Sharma"
-  },
-  {
-    "timestamp": "2026-02-21T05:04:53.000Z",
-    "type": "cash_taken",
-    "item": "Bread Loaf",
-    "amount": 50.00,
-    "cashier": "Priya Sharma"
-  },
-  {
-    "timestamp": "2026-02-21T05:04:58.000Z",
-    "type": "change_given",
-    "item": null,
-    "amount": 5.00,
-    "cashier": "Priya Sharma"
-  },
-  {
-    "timestamp": "2026-02-21T05:10:50.000Z",
-    "type": "amount_entered",
-    "item": "Eggs (12 pack)",
-    "amount": 95.00,
-    "cashier": "Rahul Verma"
-  },
-  {
-    "timestamp": "2026-02-21T05:10:58.000Z",
-    "type": "drawer_open",
-    "item": null,
-    "amount": null,
-    "cashier": "Rahul Verma"
-  },
-  {
-    "timestamp": "2026-02-21T05:11:05.000Z",
-    "type": "cash_taken",
-    "item": "Eggs (12 pack)",
     "amount": 100.00,
-    "cashier": "Rahul Verma"
+    "cashier": "Yash"
   },
   {
-    "timestamp": "2026-02-21T05:11:10.000Z",
-    "type": "giving_change",
-    "item": null,
-    "amount": 5.00,
-    "cashier": "Rahul Verma"
-  },
-  {
-    "timestamp": "2026-02-21T05:11:15.000Z",
-    "type": "change_given",
-    "item": null,
-    "amount": 5.00,
-    "cashier": "Rahul Verma"
-  },
-  {
-    "timestamp": "2026-02-21T05:24:10.000Z",
-    "type": "amount_entered",
-    "item": "Butter 200g",
-    "amount": 55.50,
-    "cashier": "Rahul Verma"
-  },
-  {
-    "timestamp": "2026-02-21T05:24:16.000Z",
-    "type": "drawer_open",
+    "timestamp": "2026-02-21T05:01:30.000Z",
+    "type": "drawer_closed",
     "item": null,
     "amount": null,
-    "cashier": "Rahul Verma"
-  },
-  {
-    "timestamp": "2026-02-21T05:24:22.000Z",
-    "type": "cash_taken",
-    "item": "Butter 200g",
-    "amount": 60.00,
-    "cashier": "Rahul Verma"
-  },
-  {
-    "timestamp": "2026-02-21T05:24:27.000Z",
-    "type": "giving_change",
-    "item": null,
-    "amount": 4.50,
-    "cashier": "Rahul Verma"
-  },
-  {
-    "timestamp": "2026-02-21T05:24:32.000Z",
-    "type": "change_given",
-    "item": null,
-    "amount": 4.50,
-    "cashier": "Rahul Verma"
-  },
-  {
-    "timestamp": "2026-02-21T05:32:20.000Z",
-    "type": "amount_entered",
-    "item": "Cooking Oil 1L",
-    "amount": 130.00,
-    "cashier": "Priya Sharma"
-  },
-  {
-    "timestamp": "2026-02-21T05:32:26.000Z",
-    "type": "drawer_open",
-    "item": null,
-    "amount": null,
-    "cashier": "Priya Sharma"
-  },
-  {
-    "timestamp": "2026-02-21T05:32:33.000Z",
-    "type": "cash_taken",
-    "item": "Cooking Oil 1L",
-    "amount": 150.00,
-    "cashier": "Priya Sharma"
-  },
-  {
-    "timestamp": "2026-02-21T05:32:38.000Z",
-    "type": "giving_change",
-    "item": null,
-    "amount": 20.00,
-    "cashier": "Priya Sharma"
-  },
-  {
-    "timestamp": "2026-02-21T05:32:44.000Z",
-    "type": "change_given",
-    "item": null,
-    "amount": 20.00,
-    "cashier": "Priya Sharma"
+    "cashier": "Yash"
   }
 ]

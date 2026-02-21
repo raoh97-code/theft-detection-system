@@ -125,6 +125,21 @@ const _camObjectURLs = { cam1: null, cam2: null };
 // Tracks which grid cameras have a video loaded
 const _allCamsLoaded = { cam1: false, cam2: false };
 
+// ── Log-unlock gate ────────────────────────────────────────────────────────
+// Logs are hidden until at least one loaded video finishes playing.
+let logsUnlocked = false;
+
+/**
+ * Called whenever any camera video reaches its end.
+ * Unlocks all log panels and triggers an immediate data fetch.
+ */
+function _onVideoEnded() {
+  if (logsUnlocked) return;   // already unlocked — nothing to do
+  logsUnlocked = true;
+  console.log('🎬 Video ended — unlocking log panels');
+  fetchData();                // populate panels immediately
+}
+
 /**
  * Called when the user picks a video file.
  * Applies the chosen video to BOTH the triggering slot and its paired slot
@@ -163,6 +178,9 @@ function loadVideoFile(videoElId, inputEl) {
     const labelId = i === 0 ? info.label : info.pairedLabel;
     const labelEl = document.getElementById(labelId);
     if (labelEl) labelEl.classList.add('hidden');
+
+    // Unlock logs when this video finishes
+    videoEl.onended = _onVideoEnded;
   });
 
   // For single-camera views: auto-play the triggering element
@@ -235,7 +253,7 @@ function toggleAllCamsPlayback() {
     if (label) label.textContent = 'Pause All';
   }
 
-  // Keep icon in sync when videos naturally end
+  // Keep icon in sync when videos naturally end, and unlock logs
   [v1, v2].forEach(v => {
     if (!v) return;
     v.onended = () => {
@@ -244,6 +262,7 @@ function toggleAllCamsPlayback() {
         if (icon) icon.textContent = '▶';
         if (label) label.textContent = 'Play All';
       }
+      _onVideoEnded();  // unlock log panels
     };
   });
 }
@@ -603,6 +622,28 @@ async function fetchData() {
     const alerts = await alertsRes.json();
     const events = await eventsRes.json();
     const posLogs = await posRes.json();
+
+    // ── Log panels are hidden until a video finishes ───────────────
+    // When logsUnlocked === false, render waiting placeholders only.
+    if (!logsUnlocked) {
+      const waitingRow = (msg) => `
+        <div class="txn-row txn-placeholder">
+          <span class="txn-time">--:--:--</span>
+          <span class="txn-msg muted">🎬 ${msg}</span>
+        </div>`;
+      const waitMsg = 'Waiting for video to complete…';
+      if (billingList) billingList.innerHTML = waitingRow(waitMsg);
+      if (personList) personList.innerHTML = waitingRow(waitMsg);
+      if (transactionList) transactionList.innerHTML = waitingRow(waitMsg);
+      if (errorList) errorList.innerHTML = waitingRow(waitMsg);
+      // Still update the status badge even before video ends
+      if (alerts && alerts.length > 0) {
+        if (statusElement) { statusElement.className = 'status abnormal'; statusElement.innerText = 'ABNORMAL'; }
+      } else {
+        if (statusElement) { statusElement.className = 'status normal'; statusElement.innerText = 'NORMAL'; }
+      }
+      return;   // skip all rendering until video completes
+    }
 
     // ── Billing Logs ── pos_logs.json ──────────────────────────────
     renderBillingLogs(posLogs);
